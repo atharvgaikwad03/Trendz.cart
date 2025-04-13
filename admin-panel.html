@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trendz Cart - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+          --primary: #000000;
+          --accent: #50ffeb;
+          --light-bg: #f8f9fa;
+          --dark-text: #212529;
+          --light-text: #6c757d;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: var(--light-bg);
+          color: var(--dark-text);
+          line-height: 1.6;
+        }
+
+        /* Admin Panel Styles */
+        #admin-panel {
+          padding: 2rem;
+        }
+
+        .admin-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          background: white;
+          padding: 2rem;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .admin-tabs {
+          display: flex;
+          border-bottom: 1px solid #ddd;
+          margin-bottom: 2rem;
+        }
+
+        .admin-tab {
+          padding: 0.75rem 1.5rem;
+          cursor: pointer;
+          border-bottom: 3px solid transparent;
+        }
+
+        .admin-tab.active {
+          border-bottom-color: var(--accent);
+          font-weight: 600;
+        }
+
+        .admin-tab-content {
+          display: none;
+        }
+
+        .admin-tab-content.active {
+          display: block;
+        }
+
+        .orders-list {
+          display: grid;
+          gap: 1.5rem;
+        }
+
+        .order-card {
+          background: white;
+          border-radius: 8px;
+          padding: 1.5rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 1px solid #eee;
+        }
+
+        .order-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #eee;
+        }
+
+        .order-id {
+          font-weight: 600;
+          color: var(--primary);
+        }
+
+        .order-date {
+          color: var(--light-text);
+          font-size: 0.9rem;
+        }
+
+        .order-status {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+
+        .status-pending {
+          background-color: #fff3cd;
+          color: #856404;
+        }
+
+        .status-shipped {
+          background-color: #d4edda;
+          color: #155724;
+        }
+
+        .order-items {
+          margin-top: 1rem;
+        }
+
+        .order-item {
+          display: flex;
+          margin-bottom: 1rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #f5f5f5;
+        }
+
+        .order-item:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .order-item-image {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-right: 1rem;
+        }
+
+        .order-item-details {
+          flex: 1;
+        }
+
+        .order-item-name {
+          font-weight: 600;
+        }
+
+        .order-item-price {
+          color: var(--light-text);
+          font-size: 0.9rem;
+        }
+
+        .order-total {
+          text-align: right;
+          font-weight: 600;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid #eee;
+        }
+
+        .order-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 1rem;
+          justify-content: flex-end;
+        }
+
+        .add-product-form {
+          margin-bottom: 3rem;
+          padding: 2rem;
+          background: #f9f9f9;
+          border-radius: 8px;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+        }
+
+        .form-control {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-family: 'Poppins', sans-serif;
+        }
+
+        textarea.form-control {
+          min-height: 100px;
+        }
+
+        .form-select {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-family: 'Poppins', sans-serif;
+          background-color: white;
+        }
+
+        .btn {
+          padding: 0.75rem 1.5rem;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+          background-color: var(--accent);
+          color: var(--primary);
+          border: none;
+        }
+
+        .btn-danger {
+          background-color: #dc3545;
+          color: white;
+          border: none;
+        }
+
+        .admin-products {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 2rem;
+        }
+
+        .admin-product-card {
+          background: white;
+          border-radius: 8px;
+          padding: 1.5rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 1px solid #eee;
+        }
+
+        .admin-product-image {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-bottom: 1rem;
+        }
+
+        .admin-product-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+
+        .back-to-store {
+          background-color: var(--primary);
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 600;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .admin-products {
+              grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          }
+          
+          .admin-header {
+              flex-direction: column;
+              align-items: flex-start;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div id="admin-panel">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>Trendz Cart Admin Panel</h1>
+                <a href="index.html" class="back-to-store">Back to Store</a>
+                <button class="btn btn-danger" id="logoutBtn">Logout</button>
+            </div>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="products">Products</div>
+                <div class="admin-tab" data-tab="pending-orders">Pending Orders</div>
+                <div class="admin-tab" data-tab="shipped-orders">Shipped Orders</div>
+            </div>
+            
+            <!-- Products Tab -->
+            <div class="admin-tab-content active" id="products-tab">
+                <div class="add-product-form">
+                    <h2>Add New Product</h2>
+                    <div class="form-group">
+                        <label for="admin-product-name" class="form-label">Product Name</label>
+                        <input type="text" id="admin-product-name" class="form-control" placeholder="Enter product name">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-price" class="form-label">Price (₹)</label>
+                        <input type="number" id="admin-product-price" class="form-control" placeholder="Enter price" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-category" class="form-label">Category</label>
+                        <select id="admin-product-category" class="form-select">
+                            <option value="men">Men</option>
+                            <option value="women">Women</option>
+                            <option value="watches">Watches</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-image" class="form-label">Image URL</label>
+                        <input type="text" id="admin-product-image" class="form-control" placeholder="Enter image URL">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-description" class="form-label">Description</label>
+                        <textarea id="admin-product-description" class="form-control" placeholder="Enter product description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-badge" class="form-label">Badge (Optional)</label>
+                        <input type="text" id="admin-product-badge" class="form-control" placeholder="New, Bestseller, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-sizes" class="form-label">Sizes (comma separated)</label>
+                        <input type="text" id="admin-product-sizes" class="form-control" placeholder="S,M,L,XL" value="S,M,L,XL">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-type" class="form-label">Type</label>
+                        <select id="admin-product-type" class="form-select">
+                            <option value="clothing">Clothing</option>
+                            <option value="accessory">Accessory</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-product-trending" class="form-label">
+                            <input type="checkbox" id="admin-product-trending"> Trending Product
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" id="admin-add-product">Add Product</button>
+                </div>
+                
+                <h2>Current Products</h2>
+                <div class="admin-products" id="adminProductsContainer">
+                    <!-- Admin products will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Pending Orders Tab -->
+            <div class="admin-tab-content" id="pending-orders-tab">
+                <h2>Pending Orders</h2>
+                <div class="orders-list" id="pendingOrdersContainer">
+                    <!-- Pending orders will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Shipped Orders Tab -->
+            <div class="admin-tab-content" id="shipped-orders-tab">
+                <h2>Shipped Orders</h2>
+                <div class="orders-list" id="shippedOrdersContainer">
+                    <!-- Shipped orders will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database - Use localStorage for both products and orders
+        let products = JSON.parse(localStorage.getItem('trendzCartProducts')) || [];
+        let orders = JSON.parse(localStorage.getItem('trendzCartOrders')) || [];
+        let currentAdminTab = "products";
+
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!sessionStorage.getItem('adminAuthenticated')) {
+                alert('Please login first');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // Initialize tabs
+            setupAdminTabs();
+            
+            // Load initial data
+            displayAdminProducts();
+            displayPendingOrders();
+            displayShippedOrders();
+            
+            // Set up event listeners
+            document.getElementById('admin-add-product').addEventListener('click', addProduct);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+
+        function saveData() {
+            localStorage.setItem('trendzCartProducts', JSON.stringify(products));
+            localStorage.setItem('trendzCartOrders', JSON.stringify(orders));
+            
+            // Dispatch storage event to notify other tabs
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'trendzCartProducts',
+                newValue: JSON.stringify(products)
+            }));
+        }
+
+        function setupAdminTabs() {
+            const tabs = document.querySelectorAll('.admin-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and content
+                    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    currentAdminTab = tab.dataset.tab;
+                    
+                    // Show corresponding content
+                    document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        function displayAdminProducts() {
+            const adminProductsContainer = document.getElementById('adminProductsContainer');
+            adminProductsContainer.innerHTML = '';
+            
+            if (products.length === 0) {
+                adminProductsContainer.innerHTML = '<p>No products found. Add your first product above.</p>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'admin-product-card';
+                productElement.innerHTML = `
+                    <img src="${product.images[0]}" alt="${product.name}" class="admin-product-image">
+                    <h3>${product.name}</h3>
+                    <p><strong>Category:</strong> ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</p>
+                    <p><strong>Price:</strong> ₹${product.price.toFixed(2)}</p>
+                    ${product.badge ? `<p><strong>Badge:</strong> ${product.badge}</p>` : ''}
+                    <p><strong>Type:</strong> ${product.type}</p>
+                    ${product.sizes ? `<p><strong>Sizes:</strong> ${product.sizes.join(', ')}</p>` : ''}
+                    <p><strong>Trending:</strong> ${product.trending ? 'Yes' : 'No'}</p>
+                    <p>${product.description}</p>
+                    <div class="admin-product-actions">
+                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+                    </div>
+                `;
+                adminProductsContainer.appendChild(productElement);
+            });
+        }
+
+        function addProduct() {
+            const name = document.getElementById('admin-product-name').value;
+            const price = parseFloat(document.getElementById('admin-product-price').value);
+            const category = document.getElementById('admin-product-category').value;
+            const image = document.getElementById('admin-product-image').value;
+            const description = document.getElementById('admin-product-description').value;
+            const badge = document.getElementById('admin-product-badge').value;
+            const sizes = document.getElementById('admin-product-sizes').value.split(',').map(s => s.trim());
+            const type = document.getElementById('admin-product-type').value;
+            const trending = document.getElementById('admin-product-trending').checked;
+            
+            if (!name || isNaN(price) || !category || !image || !description || !type) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            const newProduct = {
+                id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
+                name,
+                price,
+                category,
+                images: [image],
+                description,
+                badge: badge || null,
+                sizes: sizes.length > 0 ? sizes : null,
+                type,
+                trending: trending
+            };
+            
+            products.push(newProduct);
+            saveData();
+            displayAdminProducts();
+            
+            // Clear form
+            document.getElementById('admin-product-name').value = '';
+            document.getElementById('admin-product-price').value = '';
+            document.getElementById('admin-product-image').value = '';
+            document.getElementById('admin-product-description').value = '';
+            document.getElementById('admin-product-badge').value = '';
+            document.getElementById('admin-product-trending').checked = false;
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(product => product.id !== id);
+                saveData();
+                displayAdminProducts();
+            }
+        }
+
+        function displayPendingOrders() {
+            const pendingOrdersContainer = document.getElementById('pendingOrdersContainer');
+            pendingOrdersContainer.innerHTML = '';
+            
+            const pendingOrders = orders.filter(order => order.status === 'pending');
+            
+            if (pendingOrders.length === 0) {
+                pendingOrdersContainer.innerHTML = '<p>No pending orders found.</p>';
+                return;
+            }
+            
+            pendingOrders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-card';
+                orderElement.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">Order #${order.id}</span>
+                            <span class="order-date">${new Date(order.date).toLocaleString()}</span>
+                        </div>
+                        <span class="order-status status-pending">Pending</span>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <img src="${item.images[0]}" alt="${item.name}" class="order-item-image">
+                                <div class="order-item-details">
+                                    <div class="order-item-name">${item.name}</div>
+                                    <div class="order-item-price">₹${item.price.toFixed(2)} × ${item.quantity}</div>
+                                    ${item.size ? `<div>Size: ${item.size}</div>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">
+                        Total: ₹${order.total.toFixed(2)}
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-primary" onclick="shipOrder('${order.id}')">Mark as Shipped</button>
+                    </div>
+                `;
+                pendingOrdersContainer.appendChild(orderElement);
+            });
+        }
+
+        function displayShippedOrders() {
+            const shippedOrdersContainer = document.getElementById('shippedOrdersContainer');
+            shippedOrdersContainer.innerHTML = '';
+            
+            const shippedOrders = orders.filter(order => order.status === 'shipped');
+            
+            if (shippedOrders.length === 0) {
+                shippedOrdersContainer.innerHTML = '<p>No shipped orders found.</p>';
+                return;
+            }
+            
+            shippedOrders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-card';
+                orderElement.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">Order #${order.id}</span>
+                            <span class="order-date">${new Date(order.date).toLocaleString()}</span>
+                        </div>
+                        <span class="order-status status-shipped">Shipped</span>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <img src="${item.images[0]}" alt="${item.name}" class="order-item-image">
+                                <div class="order-item-details">
+                                    <div class="order-item-name">${item.name}</div>
+                                    <div class="order-item-price">₹${item.price.toFixed(2)} × ${item.quantity}</div>
+                                    ${item.size ? `<div>Size: ${item.size}</div>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">
+                        Total: ₹${order.total.toFixed(2)}
+                    </div>
+                `;
+                shippedOrdersContainer.appendChild(orderElement);
+            });
+        }
+
+        function shipOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = 'shipped';
+                saveData();
+                displayPendingOrders();
+                displayShippedOrders();
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminAuthenticated');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Make functions available globally
+        window.deleteProduct = deleteProduct;
+        window.shipOrder = shipOrder;
+    </script>
+</body>
+</html>
